@@ -5,5 +5,5 @@ bin
 lib
 pyvenv.cfg
 __pycache__
-
+.idea
 

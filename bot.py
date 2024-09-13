@@ -199,13 +199,20 @@ def send_question(chat_id, question_index):
         # проходим по вложенному словарю, который содержит ответы и их баллы
         for answer, points in answers.items():
             answer_list.append(answer)
-    button1 = telebot.types.KeyboardButton(text=f"Ответ 1: {answer_list[0]}")
-    button2 = telebot.types.KeyboardButton(text=f"Ответ 2: {answer_list[1]}")
-    button3 = telebot.types.KeyboardButton(text=f"Ответ 3: {answer_list[2]}")
-    button4 = telebot.types.KeyboardButton(text=f"Ответ 4: {answer_list[3]}")
+    button1 = telebot.types.KeyboardButton(text=f"Ответ 1")
+    button2 = telebot.types.KeyboardButton(text=f"Ответ 2")
+    button3 = telebot.types.KeyboardButton(text=f"Ответ 3")
+    button4 = telebot.types.KeyboardButton(text=f"Ответ 4")
     button5 = telebot.types.KeyboardButton(text="Вернуться в главное меню 🐘")
     keyboard.add(button1, button2, button3, button4, button5)
     bot.send_message(chat_id, f"""<b>{question}</b>""", reply_markup=keyboard, parse_mode='HTML')
+    bot.send_message(chat_id, f"""
+    <b>Варианты ответа:</b>
+    <i>Ответ 1: {answer_list[0]}</i>
+    <i>Ответ 2: {answer_list[1]}</i>
+    <i>Ответ 3: {answer_list[2]}</i>
+    <i>Ответ 4: {answer_list[3]}</i>
+    """, parse_mode='HTML')
 
     # пегистрируем обработчик следующего шага для получения ответа
     bot.register_next_step_handler_by_chat_id(chat_id, process_answer, question_index, answer_list)
@@ -217,7 +224,16 @@ def process_answer(message, question_index, answer_list):
         start(message)
         return
 
-    selected_answer = message.text.split(":")[1].strip()  # Извлекаем ответ из сообщения
+    if message.text == "Ответ 1":
+        selected_answer = answer_list[0]
+    elif message.text == "Ответ 2":
+        selected_answer = answer_list[1]
+    elif message.text == "Ответ 3":
+        selected_answer = answer_list[2]
+    elif message.text == "Ответ 4":
+        selected_answer = answer_list[3]
+
+    #selected_answer = message.text.split(":")[1].strip()  # Извлекаем ответ из сообщения
 
 
     # получаем правильные ответы и баллы для текущего вопроса
